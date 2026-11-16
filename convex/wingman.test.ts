@@ -255,8 +255,8 @@ describe("wingman chats", () => {
     expect(nearbyA[b]).toMatchObject({ status: "done", score: 100, chatId });
     expect((await t.query(api.wingman.forNearby, { token: "b", now: Date.now() }))[a]).toMatchObject({ status: "done" });
     expect(await t.query(api.wingman.forNearby, { token: "c", now: Date.now() })).toEqual({});
-    expect(await t.query(api.wingman.topVibe, { token: "a" })).toMatchObject({ count: 1 });
-    expect(await t.query(api.wingman.topVibe, { token: "c" })).toEqual({ count: 0, latestAt: 0 });
+    expect(await t.query(api.wingman.topVibe, { token: "a", now: Date.now() })).toMatchObject({ count: 1 });
+    expect(await t.query(api.wingman.topVibe, { token: "c", now: Date.now() })).toEqual({ count: 0, latestAt: 0 });
 
     const turnCalls = calls.filter((c) => c.messages?.[0].content.includes("You are an AI wingman"));
     expect(turnCalls).toHaveLength(6);

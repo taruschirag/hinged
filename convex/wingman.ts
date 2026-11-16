@@ -518,13 +518,13 @@ export const chat = query({
 });
 
 export const topVibe = query({
-  args: { token: v.string(), now: v.optional(v.number()) },
+  args: { token: v.string(), now: v.number() },
   handler: async (ctx, { token, now }) => {
     const me = await userByToken(ctx, token);
     if (!me) return { count: 0, latestAt: 0 };
     let count = 0;
     let latestAt = 0;
-    for (const chat of await chatsSince(ctx, me._id, (now ?? Date.now()) - HOUR_MS, 50)) {
+    for (const chat of await chatsSince(ctx, me._id, now - HOUR_MS, 50)) {
       if (chat.status !== "done" || (chat.score ?? 0) < TOP_VIBE_SCORE) continue;
       if (await isBlockedEitherWay(ctx, me._id, sideOf(chat, me._id).other)) continue;
       count++;
