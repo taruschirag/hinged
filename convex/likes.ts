@@ -3,12 +3,10 @@ import { internal } from "./_generated/api";
 import { mutation, query } from "./_generated/server";
 import {
   LIKES_PER_HOUR,
-  LOCATION_FRESH_MS,
-  NEARBY_RADIUS_METERS,
   createMatch,
-  distanceMeters,
   findMatch,
   isBlockedEitherWay,
+  isNearbyNow,
   requireUser,
   userByToken,
 } from "./lib";
@@ -32,21 +30,7 @@ export const like = mutation({
       .unique();
     if (already) return { matchId: null };
 
-    const [mine, theirs] = await Promise.all(
-      [me._id, userId].map((id) =>
-        ctx.db
-          .query("locations")
-          .withIndex("by_userId", (q) => q.eq("userId", id))
-          .unique(),
-      ),
-    );
-    const close =
-      mine &&
-      theirs &&
-      target.visibleUntil >= now &&
-      mine.updatedAt > now - LOCATION_FRESH_MS &&
-      theirs.updatedAt > now - LOCATION_FRESH_MS &&
-      distanceMeters(mine.lat, mine.lng, theirs.lat, theirs.lng) <= NEARBY_RADIUS_METERS;
+    const close = await isNearbyNow(ctx, me._id, target, now);
     if (!close) throw new ConvexError("You can only like people who are near you right now");
 
     const recent = await ctx.db

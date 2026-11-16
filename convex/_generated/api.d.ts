@@ -14,7 +14,10 @@ import type * as lib from "../lib.js";
 import type * as likes from "../likes.js";
 import type * as matches from "../matches.js";
 import type * as nearby from "../nearby.js";
+import type * as openai from "../openai.js";
 import type * as users from "../users.js";
+import type * as wingman from "../wingman.js";
+import type * as wingmanQuestions from "../wingmanQuestions.js";
 
 import type {
   ApiFromModules,
@@ -29,7 +32,10 @@ declare const fullApi: ApiFromModules<{
   likes: typeof likes;
   matches: typeof matches;
   nearby: typeof nearby;
+  openai: typeof openai;
   users: typeof users;
+  wingman: typeof wingman;
+  wingmanQuestions: typeof wingmanQuestions;
 }>;
 
 /**

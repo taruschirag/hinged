@@ -9,6 +9,7 @@ import {
   upsertLocation,
   userByToken,
 } from "./lib";
+import { triggerWingmanChats } from "./wingman";
 
 export const me = query({
   args: { token: v.string() },
@@ -98,6 +99,7 @@ export const updateLocation = mutation({
       const [dLat, dLng] = DEMO_OFFSETS[i];
       await upsertLocation(ctx, bot._id, lat + dLat, lng + dLng, now);
     }
+    await triggerWingmanChats(ctx, user, now);
   },
 });
 

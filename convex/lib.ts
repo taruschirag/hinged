@@ -123,3 +123,45 @@ export async function createMatch(ctx: MutationCtx, a: Id<"users">, b: Id<"users
     seenByB: false,
   });
 }
+
+export async function nearbyUsers(ctx: QueryCtx, me: Doc<"users">, mine: Doc<"locations">, now: number) {
+  const people: Doc<"users">[] = [];
+  for (const cell of neighborCells(mine.lat, mine.lng)) {
+    const nearby = await ctx.db
+      .query("locations")
+      .withIndex("by_cell_and_updatedAt", (q) =>
+        q.eq("cell", cell).gt("updatedAt", now - LOCATION_FRESH_MS),
+      )
+      .take(100);
+    for (const loc of nearby) {
+      if (loc.userId === me._id) continue;
+      if (distanceMeters(mine.lat, mine.lng, loc.lat, loc.lng) > NEARBY_RADIUS_METERS) continue;
+      const user = await ctx.db.get("users", loc.userId);
+      if (!user || user.visibleUntil < now) continue;
+      if (user.demoOwnerId && user.demoOwnerId !== me._id) continue;
+      if (await findMatch(ctx, me._id, user._id)) continue;
+      if (await isBlockedEitherWay(ctx, me._id, user._id)) continue;
+      people.push(user);
+    }
+  }
+  return people;
+}
+
+export async function isNearbyNow(ctx: QueryCtx, a: Id<"users">, target: Doc<"users">, now: number) {
+  const [mine, theirs] = await Promise.all(
+    [a, target._id].map((id) =>
+      ctx.db
+        .query("locations")
+        .withIndex("by_userId", (q) => q.eq("userId", id))
+        .unique(),
+    ),
+  );
+  return (
+    mine !== null &&
+    theirs !== null &&
+    target.visibleUntil >= now &&
+    mine.updatedAt > now - LOCATION_FRESH_MS &&
+    theirs.updatedAt > now - LOCATION_FRESH_MS &&
+    distanceMeters(mine.lat, mine.lng, theirs.lat, theirs.lng) <= NEARBY_RADIUS_METERS
+  );
+}
