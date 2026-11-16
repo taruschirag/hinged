@@ -3,6 +3,7 @@ import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 import { AppState } from "react-native";
 import { api } from "@convex/_generated/api";
+import { useDemoLocation } from "@/lib/demoLocation";
 import { useToken } from "@/lib/session";
 import { useNow } from "@/lib/useNow";
 
@@ -13,6 +14,7 @@ export function useLocationSync() {
   const me = useQuery(api.users.me, { token });
   const now = useNow();
   const updateLocation = useMutation(api.users.updateLocation);
+  const demo = useDemoLocation();
   const [active, setActive] = useState(AppState.currentState === "active");
   const visible = !!me && me.visibleUntil > now;
 
@@ -25,7 +27,7 @@ export function useLocationSync() {
     if (!visible || !active) return;
     let cancelled = false;
     let subscription: Location.LocationSubscription | null = null;
-    let last: { lat: number; lng: number } | null = null;
+    let last: { lat: number; lng: number } | null = demo;
     let lastSentAt = 0;
 
     const send = () => {
@@ -34,7 +36,8 @@ export function useLocationSync() {
       updateLocation({ token, ...last }).catch(() => {});
     };
 
-    (async () => {
+    if (demo) send();
+    else (async () => {
       const { granted } = await Location.requestForegroundPermissionsAsync();
       if (!granted || cancelled) return;
       subscription = await Location.watchPositionAsync(
@@ -54,5 +57,5 @@ export function useLocationSync() {
       clearInterval(timer);
       subscription?.remove();
     };
-  }, [visible, active, token, updateLocation]);
+  }, [visible, active, token, updateLocation, demo]);
 }

@@ -6,6 +6,7 @@ import { ActivityIndicator, FlatList, Linking, Pressable, StyleSheet, Text, View
 import { api } from "@convex/_generated/api";
 import { PersonCard } from "@/components/nearby/PersonCard";
 import { VisibilityToggle } from "@/components/nearby/VisibilityToggle";
+import { DEMO_COORDS, setDemoLocation } from "@/lib/demoLocation";
 import { useToken } from "@/lib/session";
 import { colors, radius, space } from "@/lib/theme";
 import { useNow } from "@/lib/useNow";
@@ -18,6 +19,14 @@ export default function NearbyScreen() {
   const admirers = useQuery(api.likes.secretAdmirers, { token });
   const locating = nearby?.status === "locating";
   const [locationDenied, setLocationDenied] = useState(false);
+  const [slowFix, setSlowFix] = useState(false);
+
+  useEffect(() => {
+    setSlowFix(false);
+    if (!locating) return;
+    const id = setTimeout(() => setSlowFix(true), 10000);
+    return () => clearTimeout(id);
+  }, [locating]);
 
   useEffect(() => {
     if (!locating) return;
@@ -64,6 +73,11 @@ export default function NearbyScreen() {
       <View style={styles.message}>
         <ActivityIndicator color={colors.accent} />
         <Text style={[styles.messageBody, { marginTop: space.md }]}>Finding people around you…</Text>
+        {slowFix && (
+          <Pressable onPress={() => setDemoLocation(DEMO_COORDS)} style={styles.messageButton}>
+            <Text style={styles.messageButtonText}>No GPS? Use a demo location</Text>
+          </Pressable>
+        )}
       </View>
     );
   } else {
