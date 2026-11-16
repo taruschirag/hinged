@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "Hinged",
+    "slug": "hinged",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "hinged",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.taruschirag.hinged"
+    },
+    "android": {
+      "package": "com.taruschirag.hinged",
+      "adaptiveIcon": {
+        "backgroundColor": "#FFF1F2",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-image",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Hinged uses your location to show you people who are near you right now. It never shows anyone your exact location."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Hinged needs a photo so people nearby can recognise you.",
+          "cameraPermission": "Hinged needs a photo so people nearby can recognise you."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
