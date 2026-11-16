@@ -10,7 +10,7 @@ import { ProfileEditor } from "@/components/profile/ProfileEditor";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { useToken } from "@/lib/session";
 import { colors, radius, space } from "@/lib/theme";
-import { useInterview } from "@/lib/wingman";
+import { useInterview, useMemoryCount } from "@/lib/wingman";
 
 const SAFETY = [
   "Visibility turns itself off after 60 minutes.",
@@ -24,6 +24,7 @@ export default function ProfileScreen() {
   const [editing, setEditing] = useState(false);
   const interview = useInterview();
   const trained = interview?.status === "done";
+  const memories = useMemoryCount(trained);
 
   if (!me) {
     return (
@@ -61,6 +62,11 @@ export default function ProfileScreen() {
                   ? (interview.shareable ?? "Ready to vibe-check people nearby. Tap to retrain.")
                   : "Five quick questions so your wingman can check the chemistry with people near you."}
               </Text>
+              {memories ? (
+                <Text style={styles.wingmanMemory}>
+                  Remembers {memories} {memories === 1 ? "thing" : "things"} about you
+                </Text>
+              ) : null}
             </View>
           </View>
           <Text style={styles.wingmanLink}>{trained ? "Retrain your wingman" : "Start"} ›</Text>
@@ -107,6 +113,7 @@ const styles = StyleSheet.create({
   wingman: { borderColor: colors.wingmanSoft, backgroundColor: colors.surface },
   wingmanRow: { flexDirection: "row", alignItems: "center", gap: space.md },
   wingmanBody: { fontSize: 14, color: colors.muted, lineHeight: 20 },
+  wingmanMemory: { fontSize: 13, color: colors.wingman, fontWeight: "600", marginTop: space.xs },
   wingmanLink: { color: colors.wingman, fontWeight: "700", marginTop: space.md },
   sectionTitle: { fontSize: 17, fontWeight: "700", color: colors.text, marginBottom: space.sm },
   safetyRow: { flexDirection: "row", marginTop: space.xs },

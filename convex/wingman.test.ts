@@ -416,3 +416,174 @@ test("internal persona build ignores stale versions", async () => {
   await t.action(internal.wingman.buildPersona, { userId: a, updatedAt: 1 });
   expect(fetchMock).not.toHaveBeenCalled();
 });
+
+describe("wingman memory (Supermemory)", () => {
+  type MemoryCall = { url: string; body: Record<string, unknown>; auth: string };
+
+  function memoryMock(opts: { search?: string[]; fail?: boolean; hang?: boolean; count?: number } = {}) {
+    const openai = openaiMock();
+    const memoryCalls: MemoryCall[] = [];
+    const fetchMock = vi.fn(
+      async (url: string, init: { body: string; headers: Record<string, string>; signal?: AbortSignal }) => {
+        if (!url.startsWith("https://api.supermemory.ai")) return openai.fetchMock(url, init);
+        memoryCalls.push({ url, body: JSON.parse(init.body) as Record<string, unknown>, auth: init.headers.Authorization });
+        if (opts.hang) {
+          return await new Promise<Response>((_, reject) =>
+            init.signal?.addEventListener("abort", () => reject(new Error("aborted"))),
+          );
+        }
+        if (opts.fail) return new Response("boom", { status: 500 });
+        if (url.endsWith("/v4/search")) {
+          return Response.json({ results: (opts.search ?? []).map((memory, i) => ({ id: "m" + i, memory, similarity: 0.9 })) });
+        }
+        if (url.endsWith("/v4/memories/list")) {
+          return Response.json({ memoryEntries: [], pagination: { currentPage: 1, totalItems: opts.count ?? 0, totalPages: 1, hasMore: false, nextCursor: null } });
+        }
+        return Response.json({ id: "doc_1", status: "queued" });
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const turnPrompts = () =>
+      openai.calls
+        .filter((c) => c.messages?.[0].content.includes("You are an AI wingman"))
+        .map((c) => c.messages![0].content);
+    return { memoryCalls, fetchMock, turnPrompts, calls: openai.calls };
+  }
+
+  async function pair(t: T) {
+    const a = await makeUser(t, "a");
+    const b = await makeUser(t, "b");
+    await giveWingman(t, a);
+    await giveWingman(t, b);
+    await t.mutation(api.users.updateLocation, { token: "a", lat: LAT, lng: LNG });
+    const [row] = await chats(t);
+    return { a, b, chatId: row._id };
+  }
+
+  const memoryKey = () => vi.stubEnv("SUPERMEMORY_API_KEY", "sm-test-key");
+
+  test("finishing the interview stores the privacy-filtered summary and bio in the user's container", async () => {
+    memoryKey();
+    const { memoryCalls } = memoryMock();
+    const t = setup();
+    const a = await makeUser(t, "a");
+    const answers = interviewQuestions.map((question, i) => ({ question, answer: i === 4 ? "My job at Acme" : "Brunch " + i }));
+    await t.mutation(api.wingman.saveInterview, { token: "a", answers });
+    await t.finishAllScheduledFunctions(vi.runAllTimers);
+
+    expect(memoryCalls).toHaveLength(1);
+    const [add] = memoryCalls;
+    expect(add.url).toBe("https://api.supermemory.ai/v3/documents");
+    expect(add.auth).toBe("Bearer sm-test-key");
+    expect(add.body).toMatchObject({ containerTag: `hinged-user-${a}`, customId: `hinged-interview-${a}` });
+    expect(add.body.content).toBe("From my wingman interview: They love slow mornings and email me at [hidden]\nProfile bio: hi");
+    expect(JSON.stringify(memoryCalls)).not.toMatch(/Acme|Brunch/);
+    expect((await t.query(api.wingman.getInterview, { token: "a" })).persona).toBe("You love slow mornings.");
+  });
+
+  test("each wingman's prompt includes its owner's memories, and the outcome is remembered per side", async () => {
+    memoryKey();
+    const { memoryCalls, turnPrompts } = memoryMock({ search: ["Loves Sunday brunch", "Plays the cello"] });
+    const t = setup();
+    const { a, b, chatId } = await pair(t);
+    await t.finishAllScheduledFunctions(vi.runAllTimers);
+    expect((await t.query(api.wingman.chat, { token: "a", chatId }))?.status).toBe("done");
+
+    const searches = memoryCalls.filter((c) => c.url.endsWith("/v4/search"));
+    expect(searches.map((s) => s.body).sort((x, y) => String(x.containerTag).localeCompare(String(y.containerTag)))).toEqual(
+      [
+        { q: `shareable for ${b}`, containerTag: `hinged-user-${a}`, limit: 3 },
+        { q: `shareable for ${a}`, containerTag: `hinged-user-${b}`, limit: 3 },
+      ].sort((x, y) => x.containerTag.localeCompare(y.containerTag)),
+    );
+    const prompts = turnPrompts();
+    expect(prompts).toHaveLength(6);
+    expect(prompts.every((p) => p.includes("<owner_memories>\n- Loves Sunday brunch\n- Plays the cello\n</owner_memories>"))).toBe(true);
+
+    const adds = memoryCalls.filter((c) => c.url.endsWith("/v3/documents"));
+    expect(adds.map((c) => c.body.containerTag).sort()).toEqual([`hinged-user-${a}`, `hinged-user-${b}`].sort());
+    const row = await t.run(async (ctx) => await ctx.db.get("wingmanChats", chatId));
+    const forA = adds.find((c) => c.body.containerTag === `hinged-user-${row!.userA}`)!;
+    expect(forA.body.content).toBe(
+      "My wingman chatted with a nearby person's wingman; chemistry score 100/100. What clicked: You both love books; Same dry humor.",
+    );
+    expect(forA.body.metadata).toEqual({ source: "wingman_chat", chatId });
+    expect(JSON.stringify(memoryCalls)).not.toMatch(/Zq/);
+  });
+
+  test("no interview memory is stored without a persona", async () => {
+    memoryKey();
+    vi.stubEnv("OPENAI_API_KEY", "");
+    const { memoryCalls } = memoryMock();
+    const t = setup();
+    await makeUser(t, "a");
+    await t.mutation(api.wingman.saveInterview, { token: "a", answers: [{ question: "q", answer: "a" }] });
+    await t.finishAllScheduledFunctions(vi.runAllTimers);
+    expect(memoryCalls).toHaveLength(0);
+  });
+
+  test("without SUPERMEMORY_API_KEY nothing calls Supermemory and chats work as before", async () => {
+    const { memoryCalls, turnPrompts } = memoryMock({ search: ["Loves Sunday brunch"] });
+    const t = setup();
+    await makeUser(t, "z");
+    await t.mutation(api.wingman.saveInterview, { token: "z", answers: [{ question: "q", answer: "a" }] });
+    const { chatId } = await pair(t);
+    await t.finishAllScheduledFunctions(vi.runAllTimers);
+    expect(memoryCalls).toHaveLength(0);
+    expect((await t.query(api.wingman.chat, { token: "a", chatId }))?.status).toBe("done");
+    expect(turnPrompts().some((p) => p.includes("owner_memories"))).toBe(false);
+    expect(await t.action(api.wingman.memoryCount, { token: "a" })).toBeNull();
+  });
+
+  test("Supermemory errors never fail the interview, the chat or the judge", async () => {
+    memoryKey();
+    const { memoryCalls, turnPrompts } = memoryMock({ fail: true });
+    const t = setup();
+    await makeUser(t, "z");
+    await t.mutation(api.wingman.saveInterview, { token: "z", answers: [{ question: "q", answer: "a" }] });
+    const { chatId } = await pair(t);
+    await t.finishAllScheduledFunctions(vi.runAllTimers);
+    expect(memoryCalls.length).toBeGreaterThan(0);
+    expect((await t.query(api.wingman.getInterview, { token: "z" })).persona).toBe("You love slow mornings.");
+    expect(await t.query(api.wingman.chat, { token: "a", chatId })).toMatchObject({ status: "done", score: 100 });
+    expect(turnPrompts().some((p) => p.includes("owner_memories"))).toBe(false);
+  });
+
+  test("a hanging Supermemory search times out after 3 seconds and the chat still finishes", async () => {
+    memoryKey();
+    const { memoryCalls, turnPrompts } = memoryMock({ hang: true });
+    const t = setup();
+    const { chatId } = await pair(t);
+    const run = t.action(internal.wingman.runChat, { chatId });
+    await vi.advanceTimersByTimeAsync(3000);
+    await vi.advanceTimersByTimeAsync(3000);
+    await run;
+    expect(memoryCalls.filter((c) => c.url.endsWith("/v4/search"))).toHaveLength(2);
+    expect(await t.query(api.wingman.chat, { token: "a", chatId })).toMatchObject({ status: "done" });
+    expect(turnPrompts()).toHaveLength(6);
+  });
+
+  test("memoryCount reports how many memories the user's wingman holds", async () => {
+    memoryKey();
+    const { memoryCalls } = memoryMock({ count: 7 });
+    const t = setup();
+    const a = await makeUser(t, "a");
+    expect(await t.action(api.wingman.memoryCount, { token: "a" })).toBe(7);
+    expect(memoryCalls[0].body).toEqual({ containerTags: [`hinged-user-${a}`], limit: 1 });
+    expect(await t.action(api.wingman.memoryCount, { token: "nobody" })).toBeNull();
+    expect(memoryCalls).toHaveLength(1);
+  });
+
+  test("demo bots get no memories read or written", async () => {
+    memoryKey();
+    const { memoryCalls } = memoryMock();
+    const t = setup();
+    const a = await makeUser(t, "a");
+    await giveWingman(t, a);
+    await t.mutation(api.demo.start, { token: "a" });
+    await t.finishAllScheduledFunctions(vi.runAllTimers);
+    expect(memoryCalls.length).toBeGreaterThan(0);
+    expect(memoryCalls.every((c) => c.body.containerTag === `hinged-user-${a}`)).toBe(true);
+  });
+});
+
