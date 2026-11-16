@@ -15,6 +15,7 @@ import type * as likes from "../likes.js";
 import type * as matches from "../matches.js";
 import type * as nearby from "../nearby.js";
 import type * as openai from "../openai.js";
+import type * as supermemory from "../supermemory.js";
 import type * as users from "../users.js";
 import type * as wingman from "../wingman.js";
 import type * as wingmanQuestions from "../wingmanQuestions.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   matches: typeof matches;
   nearby: typeof nearby;
   openai: typeof openai;
+  supermemory: typeof supermemory;
   users: typeof users;
   wingman: typeof wingman;
   wingmanQuestions: typeof wingmanQuestions;
