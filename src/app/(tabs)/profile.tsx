@@ -1,12 +1,16 @@
 import { useQuery } from "convex/react";
+import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api } from "@convex/_generated/api";
+import { WingmanOrb } from "@/components/anim/WingmanOrb";
 import { Avatar } from "@/components/matches/Avatar";
 import { DemoSection } from "@/components/profile/DemoSection";
 import { ProfileEditor } from "@/components/profile/ProfileEditor";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { useToken } from "@/lib/session";
 import { colors, radius, space } from "@/lib/theme";
+import { useInterview } from "@/lib/wingman";
 
 const SAFETY = [
   "Visibility turns itself off after 60 minutes.",
@@ -18,6 +22,8 @@ export default function ProfileScreen() {
   const token = useToken();
   const me = useQuery(api.users.me, { token });
   const [editing, setEditing] = useState(false);
+  const interview = useInterview();
+  const trained = interview?.status === "done";
 
   if (!me) {
     return (
@@ -44,6 +50,21 @@ export default function ProfileScreen() {
             </Pressable>
           </View>
         )}
+
+        <PressableScale style={[styles.card, styles.wingman]} scaleTo={0.98} onPress={() => router.push("/wingman/interview")}>
+          <View style={styles.wingmanRow}>
+            <WingmanOrb state={trained ? "happy" : "idle"} size={44} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.sectionTitle}>{trained ? "Your wingman" : "Train your wingman"}</Text>
+              <Text style={styles.wingmanBody} numberOfLines={3}>
+                {trained
+                  ? (interview.shareable ?? "Ready to vibe-check people nearby. Tap to retrain.")
+                  : "Five quick questions so your wingman can check the chemistry with people near you."}
+              </Text>
+            </View>
+          </View>
+          <Text style={styles.wingmanLink}>{trained ? "Retrain your wingman" : "Start"} ›</Text>
+        </PressableScale>
 
         <DemoSection />
 
@@ -83,6 +104,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.lg,
   },
   editText: { color: colors.accent, fontWeight: "700", fontSize: 15 },
+  wingman: { borderColor: colors.wingmanSoft, backgroundColor: colors.surface },
+  wingmanRow: { flexDirection: "row", alignItems: "center", gap: space.md },
+  wingmanBody: { fontSize: 14, color: colors.muted, lineHeight: 20 },
+  wingmanLink: { color: colors.wingman, fontWeight: "700", marginTop: space.md },
   sectionTitle: { fontSize: 17, fontWeight: "700", color: colors.text, marginBottom: space.sm },
   safetyRow: { flexDirection: "row", marginTop: space.xs },
   dot: { color: colors.accent, fontSize: 15, marginRight: space.sm },

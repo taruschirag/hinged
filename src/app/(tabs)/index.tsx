@@ -2,14 +2,22 @@ import { useQuery } from "convex/react";
 import * as Location from "expo-location";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, { FadeInDown, LinearTransition } from "react-native-reanimated";
 import { api } from "@convex/_generated/api";
 import { PersonCard } from "@/components/nearby/PersonCard";
 import { VisibilityToggle } from "@/components/nearby/VisibilityToggle";
+import { WingmanPrompt } from "@/components/wingman/WingmanPrompt";
 import { DEMO_COORDS, setDemoLocation } from "@/lib/demoLocation";
 import { useToken } from "@/lib/session";
 import { colors, radius, space } from "@/lib/theme";
 import { useNow } from "@/lib/useNow";
+import { isStrong, useInterview, useNearbyVibes, type Vibe } from "@/lib/wingman";
+
+function byVibe<T extends { _id: string }>(people: T[], vibes: Record<string, Vibe> | undefined) {
+  const score = (p: T) => (isStrong(vibes?.[p._id]) ? (vibes?.[p._id]?.score ?? 0) : -1);
+  return [...people].sort((a, b) => score(b) - score(a));
+}
 
 export default function NearbyScreen() {
   const token = useToken();
@@ -17,6 +25,8 @@ export default function NearbyScreen() {
   const me = useQuery(api.users.me, { token });
   const nearby = useQuery(api.nearby.list, { token, now });
   const admirers = useQuery(api.likes.secretAdmirers, { token });
+  const interview = useInterview();
+  const vibes = useNearbyVibes(now);
   const locating = nearby?.status === "locating";
   const [locationDenied, setLocationDenied] = useState(false);
   const [slowFix, setSlowFix] = useState(false);
@@ -42,6 +52,7 @@ export default function NearbyScreen() {
   const header = (
     <View style={styles.header}>
       <VisibilityToggle visibleUntil={me?.visibleUntil ?? 0} now={now} />
+      {interview?.status === "none" && <WingmanPrompt />}
       {!!admirers?.count && (
         <View style={styles.pill}>
           <Text style={styles.pillText}>
@@ -90,25 +101,35 @@ export default function NearbyScreen() {
     );
   }
 
+  const people = nearby?.status === "ok" ? byVibe(nearby.people, vibes) : [];
+
   return (
-    <FlatList
-      style={styles.list}
-      contentContainerStyle={styles.content}
-      data={nearby?.status === "ok" ? nearby.people : []}
-      keyExtractor={(p) => p._id}
-      numColumns={2}
-      ListHeaderComponent={header}
-      ListEmptyComponent={<>{empty}</>}
-      renderItem={({ item }) => (
-        <PersonCard
-          name={item.name}
-          age={item.age}
-          photo={item.photo}
-          liked={item.liked}
-          onPress={() => router.push({ pathname: "/person/[id]", params: { id: item._id } })}
-        />
+    <Animated.ScrollView style={styles.list} contentContainerStyle={styles.content}>
+      {header}
+      {people.length === 0 ? (
+        empty
+      ) : (
+        <View style={styles.grid}>
+          {people.map((item, i) => (
+            <Animated.View
+              key={item._id}
+              style={styles.cell}
+              entering={FadeInDown.delay(Math.min(i, 8) * 60).springify().damping(16)}
+              layout={LinearTransition.springify().damping(18).stiffness(160)}
+            >
+              <PersonCard
+                name={item.name}
+                age={item.age}
+                photo={item.photo}
+                liked={item.liked}
+                vibe={vibes?.[item._id]}
+                onPress={() => router.push({ pathname: "/person/[id]", params: { id: item._id } })}
+              />
+            </Animated.View>
+          ))}
+        </View>
       )}
-    />
+    </Animated.ScrollView>
   );
 }
 
@@ -138,6 +159,8 @@ const styles = StyleSheet.create({
   list: { flex: 1, backgroundColor: colors.background },
   content: { padding: space.md - space.xs, paddingBottom: space.xl },
   header: { padding: space.xs, gap: space.md, marginBottom: space.sm },
+  grid: { flexDirection: "row", flexWrap: "wrap" },
+  cell: { width: "50%", padding: space.xs + 2 },
   pill: {
     alignSelf: "center",
     backgroundColor: colors.accentSoft,

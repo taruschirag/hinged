@@ -7,6 +7,7 @@ import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
 import { errorMessage } from "@/components/nearby/errorMessage";
+import { WingmanReport } from "@/components/wingman/WingmanReport";
 import { useToken } from "@/lib/session";
 import { colors, radius, space } from "@/lib/theme";
 
@@ -15,6 +16,7 @@ export default function PersonScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const userId = id as Id<"users">;
   const person = useQuery(api.nearby.person, { token, userId });
+  const me = useQuery(api.users.me, { token });
   const like = useMutation(api.likes.like);
   const block = useMutation(api.users.block);
   const [liking, setLiking] = useState(false);
@@ -81,6 +83,20 @@ export default function PersonScreen() {
         {person.name}, <Text style={styles.age}>{person.age}</Text>
       </Text>
       {!!person.bio && <Text style={styles.bio}>{person.bio}</Text>}
+
+      <WingmanReport
+        userId={userId}
+        photo={person.photo}
+        myPhoto={me?.photo ?? null}
+        onUseInChat={
+          person.matchId
+            ? (opener) => {
+                router.back();
+                router.push({ pathname: "/chat/[matchId]", params: { matchId: person.matchId!, opener } });
+              }
+            : undefined
+        }
+      />
 
       {person.matchId ? (
         <Pressable

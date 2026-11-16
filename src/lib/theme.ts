@@ -8,6 +8,8 @@ export const colors = {
   accentSoft: "#FDE3E8",
   success: "#2F9E6B",
   danger: "#C9372C",
+  wingman: "#6E56CF",
+  wingmanSoft: "#EFEBFF",
 };
 
 export const radius = { sm: 10, md: 16, lg: 24, pill: 999 };
