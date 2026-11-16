@@ -462,7 +462,7 @@ describe("wingman memory (Supermemory)", () => {
 
   const memoryKey = () => vi.stubEnv("SUPERMEMORY_API_KEY", "sm-test-key");
 
-  test("finishing the interview stores the answers and bio, minus the private answer, in the user's container", async () => {
+  test("finishing the interview stores the privacy-filtered summary and bio in the user's container", async () => {
     memoryKey();
     const { memoryCalls } = memoryMock();
     const t = setup();
@@ -476,10 +476,8 @@ describe("wingman memory (Supermemory)", () => {
     expect(add.url).toBe("https://api.supermemory.ai/v3/documents");
     expect(add.auth).toBe("Bearer sm-test-key");
     expect(add.body).toMatchObject({ containerTag: `hinged-user-${a}`, customId: `hinged-interview-${a}` });
-    const content = add.body.content as string;
-    expect(content).toContain("Profile bio: hi");
-    expect(content).toContain(interviewQuestions[0] + "\nBrunch 0");
-    expect(content).not.toContain("Acme");
+    expect(add.body.content).toBe("From my wingman interview: They love slow mornings and email me at [hidden]\nProfile bio: hi");
+    expect(JSON.stringify(memoryCalls)).not.toMatch(/Acme|Brunch/);
     expect((await t.query(api.wingman.getInterview, { token: "a" })).persona).toBe("You love slow mornings.");
   });
 
@@ -511,6 +509,17 @@ describe("wingman memory (Supermemory)", () => {
     );
     expect(forA.body.metadata).toEqual({ source: "wingman_chat", chatId });
     expect(JSON.stringify(memoryCalls)).not.toMatch(/Zq/);
+  });
+
+  test("no interview memory is stored without a persona", async () => {
+    memoryKey();
+    vi.stubEnv("OPENAI_API_KEY", "");
+    const { memoryCalls } = memoryMock();
+    const t = setup();
+    await makeUser(t, "a");
+    await t.mutation(api.wingman.saveInterview, { token: "a", answers: [{ question: "q", answer: "a" }] });
+    await t.finishAllScheduledFunctions(vi.runAllTimers);
+    expect(memoryCalls).toHaveLength(0);
   });
 
   test("without SUPERMEMORY_API_KEY nothing calls Supermemory and chats work as before", async () => {

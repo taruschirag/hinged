@@ -1,6 +1,7 @@
 import { useAction, useMutation, useQuery } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
 import { useToken } from "@/lib/session";
@@ -28,16 +29,18 @@ export function useMemoryCount(enabled: boolean) {
   const token = useToken();
   const fetchCount = useAction(api.wingman.memoryCount);
   const [count, setCount] = useState<number | null>(null);
-  useEffect(() => {
-    if (!enabled) return;
-    let live = true;
-    fetchCount({ token })
-      .then((n) => live && setCount(n))
-      .catch(() => {});
-    return () => {
-      live = false;
-    };
-  }, [enabled, token]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!enabled) return;
+      let live = true;
+      fetchCount({ token })
+        .then((n) => live && setCount(n))
+        .catch(() => {});
+      return () => {
+        live = false;
+      };
+    }, [enabled, token, fetchCount]),
+  );
   return enabled ? count : null;
 }
 
