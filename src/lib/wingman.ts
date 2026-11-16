@@ -1,41 +1,12 @@
 import { useMutation, useQuery } from "convex/react";
-import { makeFunctionReference } from "convex/server";
+import type { FunctionReturnType } from "convex/server";
+import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
 import { useToken } from "@/lib/session";
 
-export type WingmanChatId = string;
-export type InterviewAnswer = { question: string; answer: string };
-export type Interview = {
-  status: "none" | "done";
-  answers: InterviewAnswer[];
-  persona: string | null;
-  shareable: string | null;
-};
-export type VibeStatus = "pending" | "talking" | "done" | "failed";
-export type Vibe = { status: VibeStatus; score: number | null; why: string[]; opener: string | null; chatId: WingmanChatId };
-export type WingmanTurn = { speaker: "mine" | "theirs"; text: string };
-export type WingmanChat = { status: VibeStatus; turns: WingmanTurn[]; score: number | null; why: string[]; opener: string | null };
+export { interviewQuestions } from "@convex/wingmanQuestions";
 
-const wingman = {
-  getInterview: makeFunctionReference<"query", { token: string }, Interview>("wingman:getInterview"),
-  saveInterview: makeFunctionReference<"mutation", { token: string; answers: InterviewAnswer[] }, unknown>(
-    "wingman:saveInterview",
-  ),
-  forNearby: makeFunctionReference<"query", { token: string; now: number }, Record<string, Vibe>>("wingman:forNearby"),
-  chat: makeFunctionReference<"query", { token: string; chatId: WingmanChatId }, WingmanChat | null>("wingman:chat"),
-  topVibe: makeFunctionReference<"query", { token: string; now: number }, { count: number; latestAt: number }>(
-    "wingman:topVibe",
-  ),
-  rerun: makeFunctionReference<"mutation", { token: string; userId: Id<"users"> }, WingmanChatId>("wingman:rerun"),
-};
-
-export const interviewQuestions = [
-  "What does a perfect lazy Sunday look like for you?",
-  "What are you obsessed with lately: music, books, shows, food, hobbies?",
-  "What makes you laugh, and how would friends describe your sense of humor?",
-  "What do you hope for when you meet someone new?",
-  "Anything your wingman should keep private? It will never bring these up.",
-] as const;
+export type Vibe = FunctionReturnType<typeof api.wingman.forNearby>[Id<"users">];
 
 export const STRONG_VIBE = 75;
 
@@ -49,32 +20,32 @@ export function isTalking(vibe: Vibe | undefined) {
 
 export function useInterview() {
   const token = useToken();
-  return useQuery(wingman.getInterview, { token });
+  return useQuery(api.wingman.getInterview, { token });
 }
 
 export function useNearbyVibes(now: number) {
   const token = useToken();
-  return useQuery(wingman.forNearby, { token, now });
+  return useQuery(api.wingman.forNearby, { token, now });
 }
 
-export function useWingmanChat(chatId: WingmanChatId) {
+export function useWingmanChat(chatId: string) {
   const token = useToken();
-  return useQuery(wingman.chat, { token, chatId });
+  return useQuery(api.wingman.chat, { token, chatId: chatId as Id<"wingmanChats"> });
 }
 
 export function useTopVibe(now: number) {
   const token = useToken();
-  return useQuery(wingman.topVibe, { token, now });
+  return useQuery(api.wingman.topVibe, { token, now });
 }
 
 export function useSaveInterview() {
   const token = useToken();
-  const save = useMutation(wingman.saveInterview);
-  return (answers: InterviewAnswer[]) => save({ token, answers });
+  const save = useMutation(api.wingman.saveInterview);
+  return (answers: { question: string; answer: string }[]) => save({ token, answers });
 }
 
 export function useRerun() {
   const token = useToken();
-  const rerun = useMutation(wingman.rerun);
+  const rerun = useMutation(api.wingman.rerun);
   return (userId: Id<"users">) => rerun({ token, userId });
 }
