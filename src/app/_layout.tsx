@@ -6,6 +6,8 @@ import { api } from "@convex/_generated/api";
 import { SessionProvider, useToken } from "@/lib/session";
 import { colors } from "@/lib/theme";
 
+export { ErrorBoundary } from "expo-router";
+
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
   unsavedChangesWarning: false,
 });
