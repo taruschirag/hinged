@@ -1,3 +1,4 @@
+import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
@@ -5,9 +6,7 @@ const KEY = "hinged.session";
 const SessionContext = createContext<string | null>(null);
 
 function newToken() {
-  const bytes = new Uint8Array(24);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  return Array.from(Crypto.getRandomBytes(24), (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 export function SessionProvider({ children }: { children: ReactNode }) {
