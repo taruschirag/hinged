@@ -3,10 +3,12 @@ import { View } from "react-native";
 import { WingmanOrb } from "@/components/anim/WingmanOrb";
 import { TopBanner } from "@/components/banner/TopBanner";
 import { colors } from "@/lib/theme";
+import { useNow } from "@/lib/useNow";
 import { useTopVibe } from "@/lib/wingman";
 
 export function WingmanVibeBanner() {
-  const vibe = useTopVibe();
+  const now = useNow();
+  const vibe = useTopVibe(now);
   return (
     <TopBanner
       signal={vibe?.latestAt}

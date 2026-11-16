@@ -23,7 +23,9 @@ const wingman = {
   ),
   forNearby: makeFunctionReference<"query", { token: string; now: number }, Record<string, Vibe>>("wingman:forNearby"),
   chat: makeFunctionReference<"query", { token: string; chatId: WingmanChatId }, WingmanChat | null>("wingman:chat"),
-  topVibe: makeFunctionReference<"query", { token: string }, { count: number; latestAt: number }>("wingman:topVibe"),
+  topVibe: makeFunctionReference<"query", { token: string; now: number }, { count: number; latestAt: number }>(
+    "wingman:topVibe",
+  ),
   rerun: makeFunctionReference<"mutation", { token: string; userId: Id<"users"> }, unknown>("wingman:rerun"),
 };
 
@@ -60,9 +62,9 @@ export function useWingmanChat(chatId: WingmanChatId) {
   return useQuery(wingman.chat, { token, chatId });
 }
 
-export function useTopVibe() {
+export function useTopVibe(now: number) {
   const token = useToken();
-  return useQuery(wingman.topVibe, { token });
+  return useQuery(wingman.topVibe, { token, now });
 }
 
 export function useSaveInterview() {
