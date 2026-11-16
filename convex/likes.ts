@@ -43,6 +43,8 @@ export const like = mutation({
     const close =
       mine &&
       theirs &&
+      target.visibleUntil >= now &&
+      mine.updatedAt > now - LOCATION_FRESH_MS &&
       theirs.updatedAt > now - LOCATION_FRESH_MS &&
       distanceMeters(mine.lat, mine.lng, theirs.lat, theirs.lng) <= NEARBY_RADIUS_METERS;
     if (!close) throw new ConvexError("You can only like people who are near you right now");
