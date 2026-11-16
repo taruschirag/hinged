@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { ConvexError } from "convex/values";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -19,13 +19,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
 import { Avatar } from "@/components/matches/Avatar";
+import { clearOpener, savedOpener } from "@/lib/openers";
 import { useToken } from "@/lib/session";
 import { colors, radius, space } from "@/lib/theme";
 
 const ICEBREAKERS = ["I'm the one by the window", "Coffee at the next stop?", "Hi! Nice to actually say hello 👋"];
 
 export default function ChatScreen() {
-  const { matchId } = useLocalSearchParams<{ matchId: Id<"matches"> }>();
+  const { matchId, opener } = useLocalSearchParams<{ matchId: Id<"matches">; opener?: string }>();
   const token = useToken();
   const insets = useSafeAreaInsets();
   const match = useQuery(api.matches.get, { token, matchId });
@@ -34,6 +35,14 @@ export default function ChatScreen() {
   const block = useMutation(api.users.block);
   const [draft, setDraft] = useState("");
   const [blocking, setBlocking] = useState(false);
+  const prefilled = useRef(false);
+
+  useEffect(() => {
+    if (prefilled.current || !match || messages === undefined) return;
+    prefilled.current = true;
+    const suggestion = opener || savedOpener(match.other._id);
+    if (messages.length === 0 && suggestion) setDraft(suggestion);
+  }, [match, messages, opener]);
 
   const submit = async (body: string) => {
     const text = body.trim();
@@ -41,6 +50,7 @@ export default function ChatScreen() {
     setDraft("");
     try {
       await send({ token, matchId, body: text });
+      if (match) clearOpener(match.other._id);
     } catch (e) {
       setDraft(text);
       Alert.alert("Couldn't send", e instanceof ConvexError ? String(e.data) : "Check your connection and try again.");

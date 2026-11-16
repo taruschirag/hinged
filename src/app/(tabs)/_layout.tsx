@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 import { View } from "react-native";
 import { AdmirerBanner } from "@/components/AdmirerBanner";
 import { MatchModal } from "@/components/MatchModal";
+import { WingmanVibeBanner } from "@/components/WingmanVibeBanner";
 import { useLocationSync } from "@/lib/useLocationSync";
 import { colors } from "@/lib/theme";
 
@@ -32,6 +33,7 @@ export default function TabsLayout() {
         />
       </Tabs>
       <AdmirerBanner />
+      <WingmanVibeBanner />
       <MatchModal />
     </View>
   );
