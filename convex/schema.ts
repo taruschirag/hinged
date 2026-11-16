@@ -59,4 +59,48 @@ export default defineSchema({
   })
     .index("by_blockerId_and_blockedId", ["blockerId", "blockedId"])
     .index("by_blockedId", ["blockedId"]),
+
+  wingmen: defineTable({
+    userId: v.id("users"),
+    answers: v.array(v.object({ question: v.string(), answer: v.string() })),
+    persona: v.union(v.string(), v.null()),
+    shareable: v.union(v.string(), v.null()),
+    embedding: v.optional(v.array(v.float64())),
+    updatedAt: v.number(),
+  })
+    .index("by_userId", ["userId"])
+    .vectorIndex("by_embedding", { vectorField: "embedding", dimensions: 1536 }),
+
+  wingmanChats: defineTable({
+    userA: v.id("users"),
+    userB: v.id("users"),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("talking"),
+      v.literal("done"),
+      v.literal("failed"),
+    ),
+    score: v.union(v.number(), v.null()),
+    whyA: v.array(v.string()),
+    whyB: v.array(v.string()),
+    openerA: v.union(v.string(), v.null()),
+    openerB: v.union(v.string(), v.null()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_userA_and_userB_and_createdAt", ["userA", "userB", "createdAt"])
+    .index("by_userA_and_createdAt", ["userA", "createdAt"])
+    .index("by_userB_and_createdAt", ["userB", "createdAt"]),
+
+  wingmanUsage: defineTable({
+    userId: v.id("users"),
+    createdAt: v.number(),
+  }).index("by_userId_and_createdAt", ["userId", "createdAt"]),
+
+  wingmanTurns: defineTable({
+    chatId: v.id("wingmanChats"),
+    speaker: v.id("users"),
+    text: v.string(),
+    order: v.number(),
+  }).index("by_chatId_and_order", ["chatId", "order"]),
 });
