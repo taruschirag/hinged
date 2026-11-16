@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "convex/react";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { api } from "@convex/_generated/api";
 import { Avatar } from "@/components/matches/Avatar";
 import { useToken } from "@/lib/session";
@@ -21,7 +21,7 @@ export function MatchModal() {
     if (visible) Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
   }, [visible, match?._id]);
 
-  if (!match) return null;
+  if (!match || !visible) return null;
 
   const close = async (openChat: boolean) => {
     setDismissedId(match._id);
@@ -30,8 +30,7 @@ export function MatchModal() {
   };
 
   return (
-    <Modal visible={visible} animationType="fade" transparent statusBarTranslucent onRequestClose={() => close(false)}>
-      <View style={styles.backdrop}>
+    <View style={styles.backdrop}>
         <Text style={styles.kicker}>You both liked each other</Text>
         <Text style={styles.title}>It's mutual!</Text>
         <View style={styles.photos}>
@@ -51,14 +50,18 @@ export function MatchModal() {
         <Pressable style={styles.secondary} onPress={() => close(false)}>
           <Text style={styles.secondaryText}>Later</Text>
         </Pressable>
-      </View>
-    </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   backdrop: {
-    flex: 1,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: 200,
     backgroundColor: colors.accent,
     alignItems: "center",
     justifyContent: "center",
