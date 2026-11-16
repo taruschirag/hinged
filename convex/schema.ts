@@ -92,6 +92,11 @@ export default defineSchema({
     .index("by_userA_and_createdAt", ["userA", "createdAt"])
     .index("by_userB_and_createdAt", ["userB", "createdAt"]),
 
+  wingmanUsage: defineTable({
+    userId: v.id("users"),
+    createdAt: v.number(),
+  }).index("by_userId_and_createdAt", ["userId", "createdAt"]),
+
   wingmanTurns: defineTable({
     chatId: v.id("wingmanChats"),
     speaker: v.id("users"),

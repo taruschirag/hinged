@@ -297,8 +297,8 @@ describe("wingman chats", () => {
     await t.mutation(api.wingman.rerun, { token: "a", userId: (await t.query(api.users.me, { token: "b" }))!._id });
     await t.finishAllScheduledFunctions(vi.runAllTimers);
     const rows = await chats(t);
-    expect(rows).toHaveLength(1);
-    expect(rows[0].status).toBe("failed");
+    expect(rows).toHaveLength(2);
+    expect(rows.every((r) => r.status === "failed")).toBe(true);
   });
 
   test("rerun replaces the finished chat, and refuses strangers far away", async () => {
@@ -309,8 +309,8 @@ describe("wingman chats", () => {
     const next = await t.mutation(api.wingman.rerun, { token: "a", userId: b });
     expect(next).not.toEqual(chatId);
     expect(await t.mutation(api.wingman.rerun, { token: "a", userId: b })).toEqual(next);
-    expect(await chats(t)).toHaveLength(1);
-    expect(await t.query(api.wingman.chat, { token: "a", chatId })).toBeNull();
+    expect(await chats(t)).toHaveLength(2);
+    expect((await t.query(api.wingman.forNearby, { token: "a", now: Date.now() }))[b].chatId).toEqual(next);
 
     const far = await makeUser(t, "far", { lat: LAT + 0.01 });
     await giveWingman(t, far);
@@ -334,6 +334,48 @@ describe("wingman chats", () => {
     await t.finishAllScheduledFunctions(vi.runAllTimers);
     const row = await t.run(async (ctx) => await ctx.db.get("wingmanChats", chatId));
     expect(row).toMatchObject({ status: "done", score: 0, whyA: ["call [hidden]", "x"], openerA: "hey [hidden]", openerB: "see [hidden]" });
+  });
+});
+
+describe("wingman quotas and privacy", () => {
+  test("editing the interview withdraws the old shareable summary until it is rebuilt", async () => {
+    const t = setup();
+    const a = await makeUser(t, "a");
+    const b = await makeUser(t, "b");
+    await giveWingman(t, a, vec(1, 0));
+    await giveWingman(t, b);
+    await t.mutation(api.wingman.saveInterview, { token: "a", answers: [{ question: "q", answer: "new" }] });
+    const row = await t.run(async (ctx) =>
+      await ctx.db.query("wingmen").withIndex("by_userId", (q) => q.eq("userId", a)).unique(),
+    );
+    expect(row).toMatchObject({ persona: null, shareable: null });
+    expect(row?.embedding).toBeUndefined();
+    await t.mutation(api.users.updateLocation, { token: "a", lat: LAT, lng: LNG });
+    expect(await chats(t)).toHaveLength(0);
+    await expect(t.mutation(api.wingman.rerun, { token: "a", userId: b })).rejects.toThrow(/Set up your wingman/);
+  });
+
+  test("the hourly cap counts both participants and survives reruns and demo restarts", async () => {
+    const t = setup();
+    const a = await makeUser(t, "a");
+    const b = await makeUser(t, "b");
+    await giveWingman(t, a);
+    await giveWingman(t, b);
+    await t.run(async (ctx) => {
+      for (let i = 0; i < 12; i++) await ctx.db.insert("wingmanUsage", { userId: b, createdAt: Date.now() });
+    });
+    await t.mutation(api.users.updateLocation, { token: "a", lat: LAT, lng: LNG });
+    expect(await chats(t)).toHaveLength(0);
+    await expect(t.mutation(api.wingman.rerun, { token: "a", userId: b })).rejects.toThrow(/breather/);
+
+    await t.mutation(api.demo.start, { token: "a" });
+    await t.mutation(api.demo.start, { token: "a" });
+    await t.mutation(api.demo.start, { token: "a" });
+    const used = await t.run(async (ctx) =>
+      (await ctx.db.query("wingmanUsage").withIndex("by_userId_and_createdAt", (q) => q.eq("userId", a)).collect()).length,
+    );
+    expect(used).toBe(12);
+    expect(await chats(t)).toHaveLength(2);
   });
 });
 

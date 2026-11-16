@@ -165,6 +165,14 @@ async function chatsSince(ctx: QueryCtx, userId: Id<"users">, since: number, lim
   return [...asA, ...asB].sort((a, b) => a.createdAt - b.createdAt);
 }
 
+async function usedThisHour(ctx: QueryCtx, userId: Id<"users">, now: number) {
+  const rows = await ctx.db
+    .query("wingmanUsage")
+    .withIndex("by_userId_and_createdAt", (q) => q.eq("userId", userId).gt("createdAt", now - HOUR_MS))
+    .take(MAX_CHATS_PER_HOUR);
+  return rows.length;
+}
+
 export async function startChat(
   ctx: MutationCtx,
   a: Id<"users">,
@@ -172,6 +180,10 @@ export async function startChat(
   delayMs: number,
   now: number,
 ) {
+  for (const id of [a, b]) {
+    if ((await usedThisHour(ctx, id, now)) >= MAX_CHATS_PER_HOUR) return null;
+  }
+  for (const id of [a, b]) await ctx.db.insert("wingmanUsage", { userId: id, createdAt: now });
   const [userA, userB] = orderedPair(a, b);
   const chatId = await ctx.db.insert("wingmanChats", {
     userA,
@@ -217,8 +229,7 @@ export async function triggerWingmanChats(ctx: MutationCtx, me: Doc<"users">, no
   if (me.visibleUntil < now || me.demoOwnerId) return;
   const mine = await wingmanFor(ctx, me._id);
   if (!mine?.shareable) return;
-  const recent = await chatsSince(ctx, me._id, now - HOUR_MS, MAX_CHATS_PER_HOUR);
-  const budget = Math.min(MAX_CHATS_PER_CALL, MAX_CHATS_PER_HOUR - recent.length);
+  const budget = Math.min(MAX_CHATS_PER_CALL, MAX_CHATS_PER_HOUR - (await usedThisHour(ctx, me._id, now)));
   if (budget <= 0) return;
   const loc = await ctx.db
     .query("locations")
@@ -236,8 +247,10 @@ export async function triggerWingmanChats(ctx: MutationCtx, me: Doc<"users">, no
     candidates.push({ userId: user._id, similarity: cosine(mine.embedding, theirs.embedding) });
   }
   candidates.sort((a, b) => b.similarity - a.similarity);
-  for (const [i, c] of candidates.slice(0, budget).entries()) {
-    await startChat(ctx, me._id, c.userId, i * 2000, now);
+  let started = 0;
+  for (const c of candidates) {
+    if (started >= budget) break;
+    if (await startChat(ctx, me._id, c.userId, started * 2000, now)) started++;
   }
 }
 
@@ -269,7 +282,15 @@ export const saveInterview = mutation({
     if (!cleaned.some((a) => a.answer)) throw new ConvexError("Answer at least one question");
     const now = Date.now();
     const existing = await wingmanFor(ctx, me._id);
-    if (existing) await ctx.db.patch("wingmen", existing._id, { answers: cleaned, updatedAt: now });
+    if (existing) {
+      await ctx.db.patch("wingmen", existing._id, {
+        answers: cleaned,
+        persona: null,
+        shareable: null,
+        embedding: undefined,
+        updatedAt: now,
+      });
+    }
     else {
       await ctx.db.insert("wingmen", {
         userId: me._id,
@@ -462,7 +483,7 @@ export const forNearby = query({
     const result: Record<Id<"users">, NearbyVibe> = {};
     const me = await userByToken(ctx, token);
     if (!me) return result;
-    for (const chat of await chatsSince(ctx, me._id, now - CHAT_DEDUPE_MS, 50)) {
+    for (const chat of await chatsSince(ctx, me._id, now - CHAT_DEDUPE_MS, 6 * MAX_CHATS_PER_HOUR)) {
       const { other, why, opener } = sideOf(chat, me._id);
       if (await isBlockedEitherWay(ctx, me._id, other)) continue;
       result[other] = { status: chat.status, score: chat.score, why, opener, chatId: chat._id };
@@ -534,11 +555,8 @@ export const rerun = mutation({
     if (!(await wingmanFor(ctx, userId))?.shareable) throw new ConvexError("They don't have a wingman yet");
     const latest = await latestPairChat(ctx, me._id, userId);
     if (latest && (latest.status === "pending" || latest.status === "talking")) return latest._id;
-    const recent = await chatsSince(ctx, me._id, now - HOUR_MS, MAX_CHATS_PER_HOUR);
-    if (recent.length >= MAX_CHATS_PER_HOUR) {
-      throw new ConvexError("Your wingman needs a breather; try again later");
-    }
-    if (latest) await deleteChat(ctx, latest._id);
-    return await startChat(ctx, me._id, userId, 0, now);
+    const chatId = await startChat(ctx, me._id, userId, 0, now);
+    if (!chatId) throw new ConvexError("Your wingman needs a breather; try again later");
+    return chatId;
   },
 });
