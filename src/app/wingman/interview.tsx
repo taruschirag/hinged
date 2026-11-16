@@ -53,6 +53,7 @@ export default function InterviewScreen() {
   const [orb, setOrb] = useState<WingmanOrbProps["state"]>("thinking");
   const scroll = useRef<ScrollViewInstance>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const mounted = useRef(true);
 
   const reviewing = step >= QUESTIONS.length && !typing;
   const previous = existing?.answers.find((a) => a.question === QUESTIONS[step])?.answer;
@@ -85,7 +86,11 @@ export default function InterviewScreen() {
 
   useEffect(() => {
     start();
-    return () => timers.current.forEach(clearTimeout);
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      timers.current.forEach(clearTimeout);
+    };
   }, []);
 
   const answer = (raw: string) => {
@@ -118,7 +123,7 @@ export default function InterviewScreen() {
       await save(payload);
       setOrb("happy");
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-      setTimeout(finish, 500);
+      if (mounted.current) timers.current.push(setTimeout(finish, 500));
     } catch (e) {
       setOrb("unsure");
       setError(errorMessage(e));

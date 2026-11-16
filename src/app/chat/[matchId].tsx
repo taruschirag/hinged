@@ -41,7 +41,7 @@ export default function ChatScreen() {
     if (prefilled.current || !match || messages === undefined) return;
     prefilled.current = true;
     const suggestion = opener || savedOpener(match.other._id);
-    if (messages.length === 0 && suggestion) setDraft(suggestion);
+    if (suggestion && (opener || messages.length === 0)) setDraft(suggestion);
   }, [match, messages, opener]);
 
   const submit = async (body: string) => {

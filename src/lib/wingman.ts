@@ -26,7 +26,7 @@ const wingman = {
   topVibe: makeFunctionReference<"query", { token: string; now: number }, { count: number; latestAt: number }>(
     "wingman:topVibe",
   ),
-  rerun: makeFunctionReference<"mutation", { token: string; userId: Id<"users"> }, unknown>("wingman:rerun"),
+  rerun: makeFunctionReference<"mutation", { token: string; userId: Id<"users"> }, WingmanChatId>("wingman:rerun"),
 };
 
 export const interviewQuestions = [

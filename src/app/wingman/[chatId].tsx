@@ -1,14 +1,15 @@
 import * as Haptics from "expo-haptics";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useQuery } from "convex/react";
 import { useEffect, useRef } from "react";
-import { ScrollView, StyleSheet, Text, View, type ScrollViewInstance } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View, type ScrollViewInstance } from "react-native";
 import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
 import { AgentsTalking } from "@/components/anim/AgentsTalking";
 import { WingmanOrb } from "@/components/anim/WingmanOrb";
 import { Avatar } from "@/components/matches/Avatar";
+import { errorMessage } from "@/components/nearby/errorMessage";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Bubble } from "@/components/wingman/Bubble";
 import { WingmanVerdict } from "@/components/wingman/WingmanVerdict";
@@ -109,7 +110,11 @@ export default function WingmanChatScreen() {
             <WingmanOrb state="unsure" size={48} />
             <Text style={styles.failedText}>Your wingman lost the thread.</Text>
             {withId && (
-              <PressableScale style={styles.retry} onPress={() => rerun(withId as Id<"users">).catch(() => {})}>
+              <PressableScale style={styles.retry} onPress={() =>
+                  rerun(withId as Id<"users">)
+                    .then((next) => router.setParams({ chatId: next }))
+                    .catch((e) => Alert.alert("Couldn’t retry", errorMessage(e)))
+                }>
                 <Text style={styles.retryText}>Try again</Text>
               </PressableScale>
             )}
