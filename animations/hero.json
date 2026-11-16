@@ -1,0 +1,2332 @@
+{
+  "version": 2,
+  "id": "hero",
+  "name": "Hinged landing hero",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "pixelAspectRatio": 1,
+    "backgroundColor": {
+      "r": 0.058823529411764705,
+      "g": 0.16470588235294117,
+      "b": 0.1803921568627451,
+      "a": 1
+    }
+  },
+  "timing": {
+    "ticksPerSecond": 240,
+    "frameRate": {
+      "numerator": 60,
+      "denominator": 1
+    },
+    "durationTicks": 1440,
+    "displayStartTick": 0
+  },
+  "assets": {},
+  "rootCompositionId": "main",
+  "components": {},
+  "compositions": {
+    "main": {
+      "id": "main",
+      "name": "Main",
+      "width": 1920,
+      "height": 1080,
+      "durationTicks": 1440,
+      "nodes": {
+        "field": {
+          "id": "field",
+          "name": "field",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 960,
+                "y": 540,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 1920,
+              "height": 1080
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 0
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.058823529411764705,
+                  "g": 0.16470588235294117,
+                  "b": 0.1803921568627451,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "glowShape": {
+          "id": "glowShape",
+          "name": "glowShape",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 960,
+                "y": 560,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "keyframed",
+              "keyframes": [
+                {
+                  "id": "glowShape.scale.0",
+                  "tick": 0,
+                  "value": {
+                    "x": 0.94,
+                    "y": 0.94,
+                    "z": 1
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "glowShape.scale.1",
+                  "tick": 362,
+                  "value": {
+                    "x": 1.05,
+                    "y": 1.05,
+                    "z": 1
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "glowShape.scale.2",
+                  "tick": 722,
+                  "value": {
+                    "x": 0.94,
+                    "y": 0.94,
+                    "z": 1
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "glowShape.scale.3",
+                  "tick": 1082,
+                  "value": {
+                    "x": 1.05,
+                    "y": 1.05,
+                    "z": 1
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "glowShape.scale.4",
+                  "tick": 1440,
+                  "value": {
+                    "x": 0.94,
+                    "y": 0.94,
+                    "z": 1
+                  },
+                  "interpolation": "hold"
+                }
+              ]
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "ellipse",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 1500,
+              "height": 720
+            }
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.09803921568627451,
+                  "g": 0.7647058823529411,
+                  "b": 0.6941176470588235,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "keyframed",
+                "keyframes": [
+                  {
+                    "id": "glowShape.opacity.0",
+                    "tick": 0,
+                    "value": 0.32,
+                    "interpolation": "bezier",
+                    "easing": {
+                      "x1": 0.45,
+                      "y1": 0,
+                      "x2": 0.55,
+                      "y2": 1
+                    }
+                  },
+                  {
+                    "id": "glowShape.opacity.1",
+                    "tick": 362,
+                    "value": 0.72,
+                    "interpolation": "bezier",
+                    "easing": {
+                      "x1": 0.45,
+                      "y1": 0,
+                      "x2": 0.55,
+                      "y2": 1
+                    }
+                  },
+                  {
+                    "id": "glowShape.opacity.2",
+                    "tick": 722,
+                    "value": 0.32,
+                    "interpolation": "bezier",
+                    "easing": {
+                      "x1": 0.45,
+                      "y1": 0,
+                      "x2": 0.55,
+                      "y2": 1
+                    }
+                  },
+                  {
+                    "id": "glowShape.opacity.3",
+                    "tick": 1082,
+                    "value": 0.72,
+                    "interpolation": "bezier",
+                    "easing": {
+                      "x1": 0.45,
+                      "y1": 0,
+                      "x2": 0.55,
+                      "y2": 1
+                    }
+                  },
+                  {
+                    "id": "glowShape.opacity.4",
+                    "tick": 1440,
+                    "value": 0.32,
+                    "interpolation": "hold"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "glow": {
+          "id": "glow",
+          "name": "glow",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "effect",
+          "inputId": "glowShape",
+          "effect": "blur",
+          "parameters": [
+            {
+              "id": "glow.radius",
+              "name": "radius",
+              "valueType": "number",
+              "value": {
+                "kind": "constant",
+                "value": 150
+              },
+              "minimum": 0,
+              "maximum": 400
+            }
+          ],
+          "capability": {
+            "requires": [
+              "image-filter"
+            ],
+            "fallback": "passthrough",
+            "maxTemporarySurfaces": 1
+          }
+        },
+        "card0": {
+          "id": "card0",
+          "name": "card0",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "keyframed",
+              "keyframes": [
+                {
+                  "id": "card0.position.0",
+                  "tick": 8,
+                  "value": {
+                    "x": 2340,
+                    "y": 606,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.16,
+                    "y1": 0.6,
+                    "x2": 0.3,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card0.position.1",
+                  "tick": 176,
+                  "value": {
+                    "x": 444,
+                    "y": 562,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.25,
+                    "y1": 0.5,
+                    "x2": 0.45,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card0.position.2",
+                  "tick": 272,
+                  "value": {
+                    "x": 480,
+                    "y": 566,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card0.position.3",
+                  "tick": 652,
+                  "value": {
+                    "x": 470,
+                    "y": 552,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card0.position.4",
+                  "tick": 1032,
+                  "value": {
+                    "x": 480,
+                    "y": 566,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.5,
+                    "y1": 0,
+                    "x2": 0.7,
+                    "y2": 0.7
+                  }
+                },
+                {
+                  "id": "card0.position.5",
+                  "tick": 1176,
+                  "value": {
+                    "x": -420,
+                    "y": 596,
+                    "z": 0
+                  },
+                  "interpolation": "hold"
+                }
+              ]
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "keyframed",
+              "keyframes": [
+                {
+                  "id": "card0.rotation.0",
+                  "tick": 8,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 6
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.16,
+                    "y1": 0.6,
+                    "x2": 0.3,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card0.rotation.1",
+                  "tick": 176,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": -5.5
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.25,
+                    "y1": 0.5,
+                    "x2": 0.45,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card0.rotation.2",
+                  "tick": 272,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": -4
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card0.rotation.3",
+                  "tick": 1032,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": -4
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.5,
+                    "y1": 0,
+                    "x2": 0.7,
+                    "y2": 0.7
+                  }
+                },
+                {
+                  "id": "card0.rotation.4",
+                  "tick": 1176,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": -12
+                  },
+                  "interpolation": "hold"
+                }
+              ]
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "group",
+          "children": [
+            "card0.body",
+            "card0.band",
+            "card0.bar0",
+            "card0.bar1",
+            "card0.bar2"
+          ]
+        },
+        "card0.body": {
+          "id": "card0.body",
+          "name": "card0.body",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 420,
+              "height": 560
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 40
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 1,
+                  "g": 0.9686274509803922,
+                  "b": 0.9333333333333333,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card0.band": {
+          "id": "card0.band",
+          "name": "card0.band",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": -110,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 380,
+              "height": 300
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 28
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9098039215686274,
+                  "g": 0.2784313725490196,
+                  "b": 0.41568627450980394,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card0.bar0": {
+          "id": "card0.bar0",
+          "name": "card0.bar0",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -40,
+                "y": 90,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 300,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card0.bar1": {
+          "id": "card0.bar1",
+          "name": "card0.bar1",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -20,
+                "y": 140,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 340,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card0.bar2": {
+          "id": "card0.bar2",
+          "name": "card0.bar2",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -80,
+                "y": 190,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 220,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card1": {
+          "id": "card1",
+          "name": "card1",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "keyframed",
+              "keyframes": [
+                {
+                  "id": "card1.position.0",
+                  "tick": 56,
+                  "value": {
+                    "x": 2340,
+                    "y": 564,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.16,
+                    "y1": 0.6,
+                    "x2": 0.3,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card1.position.1",
+                  "tick": 224,
+                  "value": {
+                    "x": 924,
+                    "y": 520,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.25,
+                    "y1": 0.5,
+                    "x2": 0.45,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card1.position.2",
+                  "tick": 320,
+                  "value": {
+                    "x": 960,
+                    "y": 524,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card1.position.3",
+                  "tick": 696,
+                  "value": {
+                    "x": 950,
+                    "y": 510,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card1.position.4",
+                  "tick": 1072,
+                  "value": {
+                    "x": 960,
+                    "y": 524,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.5,
+                    "y1": 0,
+                    "x2": 0.7,
+                    "y2": 0.7
+                  }
+                },
+                {
+                  "id": "card1.position.5",
+                  "tick": 1216,
+                  "value": {
+                    "x": -420,
+                    "y": 554,
+                    "z": 0
+                  },
+                  "interpolation": "hold"
+                }
+              ]
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "keyframed",
+              "keyframes": [
+                {
+                  "id": "card1.rotation.0",
+                  "tick": 56,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 10
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.16,
+                    "y1": 0.6,
+                    "x2": 0.3,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card1.rotation.1",
+                  "tick": 224,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": -1.5
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.25,
+                    "y1": 0.5,
+                    "x2": 0.45,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card1.rotation.2",
+                  "tick": 320,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card1.rotation.3",
+                  "tick": 1072,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.5,
+                    "y1": 0,
+                    "x2": 0.7,
+                    "y2": 0.7
+                  }
+                },
+                {
+                  "id": "card1.rotation.4",
+                  "tick": 1216,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": -8
+                  },
+                  "interpolation": "hold"
+                }
+              ]
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "group",
+          "children": [
+            "card1.body",
+            "card1.band",
+            "card1.bar0",
+            "card1.bar1",
+            "card1.bar2"
+          ]
+        },
+        "card1.body": {
+          "id": "card1.body",
+          "name": "card1.body",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 420,
+              "height": 560
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 40
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 1,
+                  "g": 0.9686274509803922,
+                  "b": 0.9333333333333333,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card1.band": {
+          "id": "card1.band",
+          "name": "card1.band",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": -110,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 380,
+              "height": 300
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 28
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 1,
+                  "g": 0.788235294117647,
+                  "b": 0.2901960784313726,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card1.bar0": {
+          "id": "card1.bar0",
+          "name": "card1.bar0",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -40,
+                "y": 90,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 300,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card1.bar1": {
+          "id": "card1.bar1",
+          "name": "card1.bar1",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -20,
+                "y": 140,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 340,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card1.bar2": {
+          "id": "card1.bar2",
+          "name": "card1.bar2",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -80,
+                "y": 190,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 220,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card2": {
+          "id": "card2",
+          "name": "card2",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "keyframed",
+              "keyframes": [
+                {
+                  "id": "card2.position.0",
+                  "tick": 104,
+                  "value": {
+                    "x": 2340,
+                    "y": 606,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.16,
+                    "y1": 0.6,
+                    "x2": 0.3,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card2.position.1",
+                  "tick": 272,
+                  "value": {
+                    "x": 1404,
+                    "y": 562,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.25,
+                    "y1": 0.5,
+                    "x2": 0.45,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card2.position.2",
+                  "tick": 368,
+                  "value": {
+                    "x": 1440,
+                    "y": 566,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card2.position.3",
+                  "tick": 740,
+                  "value": {
+                    "x": 1430,
+                    "y": 552,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card2.position.4",
+                  "tick": 1112,
+                  "value": {
+                    "x": 1440,
+                    "y": 566,
+                    "z": 0
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.5,
+                    "y1": 0,
+                    "x2": 0.7,
+                    "y2": 0.7
+                  }
+                },
+                {
+                  "id": "card2.position.5",
+                  "tick": 1256,
+                  "value": {
+                    "x": -420,
+                    "y": 596,
+                    "z": 0
+                  },
+                  "interpolation": "hold"
+                }
+              ]
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "keyframed",
+              "keyframes": [
+                {
+                  "id": "card2.rotation.0",
+                  "tick": 104,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 14
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.16,
+                    "y1": 0.6,
+                    "x2": 0.3,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card2.rotation.1",
+                  "tick": 272,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 2.5
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.25,
+                    "y1": 0.5,
+                    "x2": 0.45,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card2.rotation.2",
+                  "tick": 368,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 4
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.45,
+                    "y1": 0,
+                    "x2": 0.55,
+                    "y2": 1
+                  }
+                },
+                {
+                  "id": "card2.rotation.3",
+                  "tick": 1112,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 4
+                  },
+                  "interpolation": "bezier",
+                  "easing": {
+                    "x1": 0.5,
+                    "y1": 0,
+                    "x2": 0.7,
+                    "y2": 0.7
+                  }
+                },
+                {
+                  "id": "card2.rotation.4",
+                  "tick": 1256,
+                  "value": {
+                    "x": 0,
+                    "y": 0,
+                    "z": -4
+                  },
+                  "interpolation": "hold"
+                }
+              ]
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "group",
+          "children": [
+            "card2.body",
+            "card2.band",
+            "card2.bar0",
+            "card2.bar1",
+            "card2.bar2"
+          ]
+        },
+        "card2.body": {
+          "id": "card2.body",
+          "name": "card2.body",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 420,
+              "height": 560
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 40
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 1,
+                  "g": 0.9686274509803922,
+                  "b": 0.9333333333333333,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card2.band": {
+          "id": "card2.band",
+          "name": "card2.band",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": -110,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 380,
+              "height": 300
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 28
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.22745098039215686,
+                  "g": 0.22745098039215686,
+                  "b": 1,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card2.bar0": {
+          "id": "card2.bar0",
+          "name": "card2.bar0",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -40,
+                "y": 90,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 300,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card2.bar1": {
+          "id": "card2.bar1",
+          "name": "card2.bar1",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -20,
+                "y": 140,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 340,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        },
+        "card2.bar2": {
+          "id": "card2.bar2",
+          "name": "card2.bar2",
+          "visible": true,
+          "inTick": 0,
+          "outTick": 1440,
+          "opacity": {
+            "kind": "constant",
+            "value": 1
+          },
+          "transform": {
+            "position": {
+              "kind": "constant",
+              "value": {
+                "x": -80,
+                "y": 190,
+                "z": 0
+              }
+            },
+            "anchor": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "scale": {
+              "kind": "constant",
+              "value": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "rotation": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            },
+            "skew": {
+              "kind": "constant",
+              "value": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          },
+          "blendMode": "normal",
+          "type": "rect",
+          "size": {
+            "kind": "constant",
+            "value": {
+              "width": 220,
+              "height": 24
+            }
+          },
+          "cornerRadius": {
+            "kind": "constant",
+            "value": 12
+          },
+          "style": {
+            "fill": {
+              "color": {
+                "kind": "constant",
+                "value": {
+                  "r": 0.9176470588235294,
+                  "g": 0.8745098039215686,
+                  "b": 0.8235294117647058,
+                  "a": 1
+                }
+              },
+              "opacity": {
+                "kind": "constant",
+                "value": 1
+              }
+            }
+          }
+        }
+      },
+      "rootNodeIds": [
+        "field",
+        "glow",
+        "card0",
+        "card1",
+        "card2"
+      ]
+    }
+  },
+  "markers": [
+    {
+      "id": "cards-in",
+      "name": "cards-in",
+      "tick": 8,
+      "durationTicks": 0
+    },
+    {
+      "id": "overshoot",
+      "name": "overshoot",
+      "tick": 272,
+      "durationTicks": 0
+    },
+    {
+      "id": "settled",
+      "name": "settled",
+      "tick": 368,
+      "durationTicks": 0
+    },
+    {
+      "id": "drift-out",
+      "name": "drift-out",
+      "tick": 1032,
+      "durationTicks": 0
+    }
+  ],
+  "design": {
+    "tokens": {
+      "looping": true
+    }
+  },
+  "capabilities": {
+    "required": [],
+    "optional": [],
+    "unsupportedPolicy": "warn"
+  },
+  "revision": "sha256:2e06b511f5cc3d117b859c431bd7b077d92ebccb4fcba281cb7502c1cbb56528"
+}
