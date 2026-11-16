@@ -54,7 +54,7 @@ export function MatchBurst({ play, onDone }: MatchBurstProps) {
   return (
     <View style={[StyleSheet.absoluteFill, styles.overlay, !running && styles.hidden]} pointerEvents="none">
       {fallback ? (
-        running ? <BurstFallback key={playId} onFinished={finish} /> : null
+        running ? <BurstFallback key={playId} onFinished={finish} animate={!reduceMotion} /> : null
       ) : (
         <DomBoundary onError={() => void onFailed("render error")}>
           <MatchBurstDom playId={running ? playId : 0} reduceMotion={reduceMotion} onReady={onReady} onFailed={onFailed} onFinished={finish} dom={DOM_PROPS} />
@@ -71,16 +71,20 @@ const PARTICLES = Array.from({ length: 16 }, (_, i) => ({
   color: [colors.accent, "#FFC14D", "#FF9A62", "#FF8FA6"][i % 4],
 }));
 
-function BurstFallback({ onFinished }: { onFinished: () => void }) {
+function BurstFallback({ onFinished, animate }: { onFinished: () => void; animate: boolean }) {
   const { width, height } = useWindowDimensions();
   const span = Math.min(width, height);
-  const t = useRef(new Animated.Value(0)).current;
+  const t = useRef(new Animated.Value(animate ? 0 : 0.3)).current;
 
   useEffect(() => {
+    if (!animate) {
+      const timer = setTimeout(onFinished, 1200);
+      return () => clearTimeout(timer);
+    }
     const anim = Animated.timing(t, { toValue: 1, duration: DURATION, easing: Easing.out(Easing.cubic), useNativeDriver: true });
     anim.start(({ finished }) => finished && onFinished());
     return () => anim.stop();
-  }, [t, onFinished]);
+  }, [t, onFinished, animate]);
 
   const fade = t.interpolate({ inputRange: [0, 0.7, 1], outputRange: [1, 1, 0] });
   return (

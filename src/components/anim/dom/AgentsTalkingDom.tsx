@@ -7,6 +7,7 @@ import talking from "../../../../assets/anim/agents-talking.json";
 import { Stage, useClayzo } from "./useClayzo";
 
 const document = talking as unknown as AnimationDocument;
+const STILL_TICK = 200;
 
 export default function AgentsTalkingDom({ active, reduceMotion, onReady, onFailed }: {
   active: boolean;
@@ -19,13 +20,13 @@ export default function AgentsTalkingDom({ active, reduceMotion, onReady, onFail
 
   useEffect(() => {
     if (!player) return;
-    if (active) {
+    if (active && !reduceMotion) {
       player.play();
       return;
     }
     player.pause();
-    void player.seek(0);
-  }, [player, active]);
+    void player.seek(active ? STILL_TICK : 0);
+  }, [player, active, reduceMotion]);
 
   return <Stage canvasRef={canvasRef} />;
 }

@@ -8,6 +8,8 @@ import { Stage, useClayzo } from "./useClayzo";
 
 const document = burst as unknown as AnimationDocument;
 const LAST_TICK = document.timing.durationTicks - 8;
+const STILL_TICK = 200;
+const STILL_MS = 1200;
 
 export default function MatchBurstDom({ playId, reduceMotion, onReady, onFailed, onFinished }: {
   playId: number;
@@ -31,6 +33,12 @@ export default function MatchBurstDom({ playId, reduceMotion, onReady, onFailed,
 
   useEffect(() => {
     if (!player || playId === 0) return;
+    if (reduceMotion) {
+      player.pause();
+      void player.seek(STILL_TICK);
+      const timer = setTimeout(() => void onFinished(), STILL_MS);
+      return () => clearTimeout(timer);
+    }
     running.current = true;
     void player.seek(0).then(() => player.play());
   }, [player, playId]);

@@ -61,10 +61,12 @@ export function useClayzo(document: AnimationDocument, bridge: ClayzoBridge, opt
 
 const RESET = "html,body,body>div{margin:0;padding:0;width:100%;height:100%;background:transparent;overflow:hidden;-webkit-user-select:none;user-select:none}";
 
+const inNativeWebView = typeof window !== "undefined" && "$$EXPO_DOM_HOST_OS" in window;
+
 export function Stage({ canvasRef, canvasStyle, children }: { canvasRef: RefObject<HTMLCanvasElement | null>; canvasStyle?: CSSProperties; children?: ReactNode }) {
   return (
-    <div style={{ position: "fixed", inset: 0, pointerEvents: "none" }}>
-      <style>{RESET}</style>
+    <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
+      {inNativeWebView ? <style>{RESET}</style> : null}
       <canvas ref={canvasRef} aria-hidden style={{ display: "block", width: "100%", height: "100%", ...canvasStyle }} />
       {children}
     </div>
