@@ -31,7 +31,7 @@ function Gate() {
 
   return (
     <Stack screenOptions={{ contentStyle: { backgroundColor: colors.background }, headerTintColor: colors.text }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Back" }} />
       <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="person/[id]" options={{ presentation: "modal", title: "" }} />
       <Stack.Screen name="chat/[matchId]" options={{ title: "Chat" }} />

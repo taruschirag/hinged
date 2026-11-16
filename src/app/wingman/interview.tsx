@@ -169,6 +169,7 @@ export default function InterviewScreen() {
         ref={scroll}
         style={{ flex: 1 }}
         contentContainerStyle={styles.thread}
+        contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
         onContentSizeChange={() => scroll.current?.scrollToEnd({ animated: true })}
       >
